@@ -22,9 +22,12 @@ Presentation notes / talking points
 - PoS: security via economic stake, energy-efficient, various selection schemes
 
 License: Feel free to fork, adapt, and include these snippets in your slides.
-If you want separate files per mechanism, GUI-style runners, or Jupyter notebook versions for slides, I can prepare them.
+
+---
 
 # Blockchain Financial Examples for Presentation
+
+![Blockchain in Finance](./blockchain_in_finance.png)
 
 This folder contains three short, self-contained Python demos you can use in slides or run live:
 
@@ -34,8 +37,7 @@ This folder contains three short, self-contained Python demos you can use in sli
 
 How to use
 - Requires Python 3.7+.
-- Run each demo: python3 payment_example.py (or smart_contract_example.py / bonds_example.py).
-- These are educational examples only — signatures and security are mocked/simplified intentionally for clarity.
+- Run each demo: `python3 payment_example.py` (or `smart_contract_example.py` / `bonds_example.py`).
 
 Presentation talking points
 - Payment example: discuss atomic transfer, nonce for replay protection, mempool ordering, and why signatures matter.
@@ -48,4 +50,4 @@ Next steps / suggestions
 - Wire these examples to a tiny simulated P2P network or consensus demo so you can show transactions being broadcast and included in blocks.
 - Split into modules and add unit tests for each behavior to show testable financial logic.
 
-License: Use freely in your presentation. If you want, I can create a PR to QuantLet/BCN-Seminar with these files — tell me the desired path (e.g., examples/blockchain-finance/) and whether to open the PR from your branch.
+License: Use freely in your presentation.
