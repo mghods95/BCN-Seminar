@@ -299,92 +299,92 @@ plt.title(f'The "Golden Era" Spread ({start_slice} to {end_slice})', fontsize=14
 plt.ylabel('Spread')
 plt.show()
 
-## Visualization (Animation) ==============================
+## Visualization (Animation: High Contrast Blue) ==============================
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import matplotlib.cm as cm
 import numpy as np
 
-# 1. Read data (If previous df is still in memory, skip this step)
+# 1. 读取数据
 try:
     df = pd.read_csv('crypto_data.csv', index_col=0, parse_dates=True)
-    # Recalculate log prices
     if 'ln_BTC' not in df.columns:
         print("Recalculating log prices...")
         df['ln_BTC'] = np.log(df['BTC'])
         df['ln_ETH'] = np.log(df['ETH'])
 except Exception as e:
-    print(f"Error reading or processing data: {e}")
-    # Generate dummy data for demonstration
+    print(f"Error reading data: {e}")
     df = pd.DataFrame({
         'ln_BTC': np.linspace(5, 12, 2200),
         'ln_ETH': np.linspace(5, 12, 2200) + np.random.normal(0, 0.5, 2200)
     })
 
 # ==========================================
-# ⚡️ Core Logic for Speed Control ⚡️
+# ⚡️ 强对比度配置 ⚡️
 # ==========================================
-TARGET_DURATION = 6  # Target duration: 6 seconds
-FPS = 30             # Frame rate: 30 fps
-TOTAL_FRAMES = TARGET_DURATION * FPS  # Total frames = 180 frames
-
-# Calculate step size: How many new points per frame?
-# If there are 2160 data points, step size is approx 2160 / 180 = 12
+TARGET_DURATION = 6
+FPS = 30
+TOTAL_FRAMES = TARGET_DURATION * FPS
 data_len = len(df)
 step = max(1, data_len // TOTAL_FRAMES)
-
-# Generate list of keyframe indices (e.g., 0, 12, 24, 36...)
 frame_indices = list(range(0, data_len, step))
-# Ensure the last frame includes all data
 if frame_indices[-1] != data_len:
     frame_indices.append(data_len)
 
-print(f"Total Data Points: {data_len}, Target Duration: {TARGET_DURATION}s")
-print(f"Total Frames Generated: {len(frame_indices)}, New Points per Frame: {step}")
+# --- 【关键修改：使用对比度更高的 'PuBu' 色谱】 ---
+# 'PuBu' 是从极浅的紫色渐变到深蓝色，比纯 'Blues' 更有层次感，视觉区分更明显
+# 范围从 0.2 (非常浅) 到 1.0 (极深)
+cmap = cm.get_cmap('PuBu')
+all_colors = cmap(np.linspace(0.2, 1.0, data_len))
+
+print(f"Total Points: {data_len}, Target Duration: {TARGET_DURATION}s")
 # ==========================================
 
-# 2. Set canvas
+# 2. 设置画布
 fig, ax = plt.subplots(figsize=(8, 8))
-
-# Global transparency
 fig.patch.set_alpha(0.0)
 ax.patch.set_alpha(0.0)
 
-# 3. Lock axis ranges (Must use full data to calculate ranges)
+# 3. 锁定坐标轴
 x_min, x_max = df['ln_BTC'].min() - 0.5, df['ln_BTC'].max() + 0.5
 y_min, y_max = df['ln_ETH'].min() - 0.5, df['ln_ETH'].max() + 0.5
-
 ax.set_xlim(x_min, x_max)
 ax.set_ylim(y_min, y_max)
 ax.set_xlabel('Log BTC Price')
 ax.set_ylabel('Log ETH Price')
-ax.set_title(f'Scatter Plot Animation ({TARGET_DURATION}s version)', color='black')
+ax.set_title(f'Scatter Plot: High Contrast Time Evolution', color='black')
 
-# Initialize scatter object
-scat = ax.scatter([], [], alpha=0.6, c='#1f77b4', edgecolors='none')
+# 初始化散点对象
+# alpha=0.8 让颜色更实，对比更明显
+scat = ax.scatter([], [], alpha=0.8, edgecolors='none')
 
 
-# 4. Update function
+# 4. 更新函数
 def update(frame_idx):
-    # frame_idx is the index preset in frame_indices
     current_data = df.iloc[:frame_idx]
 
     if len(current_data) > 0:
+        # 更新位置
         offsets = current_data[['ln_BTC', 'ln_ETH']].values
         scat.set_offsets(offsets)
+
+        # 更新颜色 (从预设好的高对比数组中取)
+        current_colors = all_colors[:frame_idx]
+        scat.set_color(current_colors)
+
     return scat,
 
 
-# 5. Create animation
-# frames=frame_indices: Pass in the calculated list of skip indices directly
+# 5. 创建动画
 ani = animation.FuncAnimation(fig, update, frames=frame_indices, interval=1000 / FPS, blit=True)
 
-# 6. Save
-print("Rendering 6-second high-speed animation...")
+# 6. 保存
+print("Rendering high-contrast animation...")
 try:
-    # fps=FPS (30) determines playback speed
-    ani.save('scatter_fast_6s.gif', writer='pillow', fps=FPS, savefig_kwargs={'transparent': True, 'facecolor': 'none'})
-    print("Success! Saved as scatter_fast_6s.gif")
+    ani.save('scatter_high_contrast_6s.gif', writer='pillow', fps=FPS,
+             savefig_kwargs={'transparent': True, 'facecolor': 'none'})
+    print("Success! Saved as scatter_high_contrast_6s.gif")
 except Exception as e:
     print(f"Save failed: {e}")
 
