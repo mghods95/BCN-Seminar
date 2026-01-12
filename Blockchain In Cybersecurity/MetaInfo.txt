@@ -1,9 +1,11 @@
-%% MetaInfo
+Name of Quantlet: Blockchain in Cybersecurity (IDS / DDoS)
 
-Name: Blockchain in Cybersecurity (IDS / DDoS)
 Description: "Exploratory analysis of an intrusion-detection (IDS) network-flow dataset (CIC-IDS2017 DDoS), extended with blockchain-inspired integrity features (hash-chain / Merkle-root) to demonstrate tamper-evidence, improved traceability, and anomaly-based DDoS detection with clear visualizations."
+
 Keywords: blockchain, cybersecurity, IDS, intrusion detection, DDoS, CIC-IDS2017, network flows, anomaly detection, machine learning, hashing, merkle tree, tamper evidence, visualization, data analysis
+
 Author: Wolfgang Karl Härdle, Haiyao Ni
+
 Submitted_By: Haiyao Ni
 Submitted_To: BCN-Seminar_Courselet_2
 Institution: Humboldt University of Berlin
