@@ -3,6 +3,7 @@ import math
 # --- SHA-256 Constants and Initial Hash Values (H) ---
 # Initial hash values (h0 to h7), computed from the fractional parts 
 # of the square roots of the first 8 primes (2..19)
+# hexadecimal representation for better readability
 H = [
     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 
     0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
@@ -10,6 +11,7 @@ H = [
 
 # Сonstants (k0 to k63), computed from the fractional parts 
 # of the cube roots of the first 64 primes (2..311)
+# hexadecimal representation for better readability
 K = [
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
     0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
@@ -94,9 +96,9 @@ def preprocess_message(input_string):
 
 def sha256_hash(blocks):
     # Initialize working hash values h0 to h7 to the initial constants H 
-    h = list(H) 
+    hash_vals = list(H) 
 
-    # Process each 512-bit block [cite: 678]
+    # Process each 512-bit block 
     for block in blocks:
         # 1. Prepare the Message Schedule W (W0 to W63) 
         W = []
@@ -110,18 +112,18 @@ def sha256_hash(blocks):
             W.append((sigma1(W[t-2]) + W[t-7] + sigma0(W[t-15]) + W[t-16]) & 0xFFFFFFFF)
 
         # 2. Initialize working variables a, b, c, d, e, f, g, h 
-        a, b, c, d, e, f, g, hh = h 
+        a, b, c, d, e, f, g, h = hash_vals
 
         # 3. Compression loop (64 rounds) 
         for t in range(64):
             # T1 = h + Sigma1(e) + Ch(e, f, g) + Kt + Wt (mod 2^32) 
-            T1 = (hh + Sigma1(e) + Ch(e, f, g) + K[t] + W[t]) & 0xFFFFFFFF
+            T1 = (h + Sigma1(e) + Ch(e, f, g) + K[t] + W[t]) & 0xFFFFFFFF
             
             # T2 = Sigma0(a) + Maj(a, b, c) (mod 2^32) 
             T2 = (Sigma0(a) + Maj(a, b, c)) & 0xFFFFFFFF
 
             # Update working variables (shift operation) 
-            hh = g                                  # h = g
+            h = g                                   # h = g
             g = f                                   # g = f
             f = e                                   # f = e
             e = (d + T1) & 0xFFFFFFFF               # e = d + T1
@@ -131,16 +133,16 @@ def sha256_hash(blocks):
             a = (T1 + T2) & 0xFFFFFFFF              # a = T1 + T2
 
         # 4. Add final values of working variables to hash values (h0 to h7) [cite: 831]
-        h[0] = (h[0] + a) & 0xFFFFFFFF 
-        h[1] = (h[1] + b) & 0xFFFFFFFF
-        h[2] = (h[2] + c) & 0xFFFFFFFF
-        h[3] = (h[3] + d) & 0xFFFFFFFF
-        h[4] = (h[4] + e) & 0xFFFFFFFF
-        h[5] = (h[5] + f) & 0xFFFFFFFF
-        h[6] = (h[6] + g) & 0xFFFFFFFF
-        h[7] = (h[7] + hh) & 0xFFFFFFFF
+        hash_vals[0] = (hash_vals[0] + a) & 0xFFFFFFFF 
+        hash_vals[1] = (hash_vals[1] + b) & 0xFFFFFFFF
+        hash_vals[2] = (hash_vals[2] + c) & 0xFFFFFFFF
+        hash_vals[3] = (hash_vals[3] + d) & 0xFFFFFFFF
+        hash_vals[4] = (hash_vals[4] + e) & 0xFFFFFFFF
+        hash_vals[5] = (hash_vals[5] + f) & 0xFFFFFFFF
+        hash_vals[6] = (hash_vals[6] + g) & 0xFFFFFFFF
+        hash_vals[7] = (hash_vals[7] + h) & 0xFFFFFFFF
         
-    return h
+    return hash_vals
 
 # --- Final Digest Generation ---
 
