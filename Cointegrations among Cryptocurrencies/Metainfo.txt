@@ -1,0 +1,11 @@
+Name of Quantlet: Cointegration among Cryptocurrencies
+
+Published in:     Blockchains, Crypto Currencies, Network Analytics (WS 25/26)
+
+Description:      'This courselet offers an empirical investigation into the cointegration among cryptocurrencies.'
+
+Keywords:         Cointegration, Cryptocurrency
+
+Author:           Xiaotong WU, Wolfgang Karl Härdle
+
+Submitted:        22. Jan 2026, Xiaotong WU
